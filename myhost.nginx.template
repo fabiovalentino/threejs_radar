@@ -1,0 +1,42 @@
+server {
+    server_name myhost.com;
+
+	index index.htm index.html index.php;
+
+	root /var/www/http/myhost.com;
+
+	location / {
+	        try_files $uri $uri/ =404;
+	}
+
+	location /rest/ {
+	        proxy_set_header Host $host;
+        	proxy_set_header Upgrade $http_upgrade;
+        	proxy_set_header Connection upgrade;
+        	proxy_set_header Accept-Encoding gzip;
+     		proxy_pass http://myhost/;
+     		proxy_redirect off;
+    	}
+
+
+    listen 443 ssl;
+    ssl_certificate /etc/letsencrypt/live/myhost.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/myhost.com/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+}
+
+
+server {
+    if ($host = myhost.com) {
+        return 301 https://$host$request_uri;
+    }
+
+
+        listen 80 default_server;
+        server_name myhost.com;
+    return 404;
+
+
+}

@@ -1,0 +1,11 @@
+<ng-select     
+               [items]="items"
+               bindLabel="name"
+               placeholder=""
+               appendTo="body"
+               [(ngModel)]="selected"
+               (change)="getValues()">>
+</ng-select>
+<button (click)="resetVisual()">3D View</button>  
+<button (click)="highVisual()">2D View</button>  
+<button (click)="refreshVisual()">Refresh</button>  
